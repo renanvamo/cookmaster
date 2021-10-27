@@ -1,11 +1,12 @@
 const { MongoClient } = require('mongodb');
+require('dotenv').config();
 
 const OPTIONS = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 };
 
-const { MONGO_DB_URL = 'mongodb://mongodb:27017/Cookmaster' } = process.env;
+const MONGO_DB_URL = `mongodb://${process.env.HOST || 'mongodb'}:27017/Cookmaster`;
 const { DB_NAME = 'Cookmaster'} = process.env;
 
 let db = null;

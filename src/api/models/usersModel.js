@@ -17,6 +17,9 @@ const createUser = async (name, email, password, role) => {
   const alreadyExistEmail = await getUserByEmail(email);
   if (alreadyExistEmail) return null;
 
+  const result = await mongoConnection.find().toArray();
+  console.log(result);
+
   const { insertedId: id } = await mongoConnection.insertOne({ name, email, password, role });
   return {
     name,
