@@ -7,7 +7,7 @@ const createUser = async (data) => {
   const { name, password, email, role = 'user' } = data;
 
   const { error: validationError } = userValidations(data);
-  if (validationError) return createError('badRequest', 'Invalid entries. Try again.');;
+  if (validationError) return createError('badRequest', 'Invalid entries. Try again.');
 
   const newUser = await usersModel.createUser(name, email, password, role);
   
@@ -17,4 +17,4 @@ const createUser = async (data) => {
 
 module.exports = {
   createUser,
-}
+};

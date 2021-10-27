@@ -7,7 +7,7 @@ const OPTIONS = {
 };
 
 const MONGO_DB_URL = `mongodb://${process.env.HOST || 'mongodb'}:27017/Cookmaster`;
-const { DB_NAME = 'Cookmaster'} = process.env;
+const { DB_NAME = 'Cookmaster' } = process.env;
 
 let db = null;
 

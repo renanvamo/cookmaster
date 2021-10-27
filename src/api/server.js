@@ -1,5 +1,5 @@
-const app = require('./app');
 const express = require('express');
+const app = require('./app');
 // const path = require('path');
 // const multer = require('multer');
 const userRoutes = require('./routes/users');

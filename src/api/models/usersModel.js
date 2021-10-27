@@ -1,8 +1,7 @@
 const connection = require('../connection/connection');
-const { ObjectId } = require('mongodb');
 
 const USER_COLLECTION = 'users';
-const userConnection = () => connection().then(db => db.collection(USER_COLLECTION));
+const userConnection = () => connection().then((db) => db.collection(USER_COLLECTION));
 
 const getUserByEmail = async (email) => {
   const mongoConnection = await userConnection();
@@ -26,9 +25,9 @@ const createUser = async (name, email, password, role) => {
     email,
     role,
     _id: id,
-  }
+  };
 };
 
 module.exports = {
   createUser,
-}
+};
