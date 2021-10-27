@@ -11,7 +11,7 @@ const getUserByName = (name) => {
   return user;
 };
 
-const createUser = async ({ name, email, password, role }) => {
+const createUser = async (name, email, password, role) => {
   const mongoConnection = await userConnection();
 
   const alreadyExistUser = await getUserByName(name);
