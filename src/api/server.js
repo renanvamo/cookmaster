@@ -3,6 +3,7 @@ const app = require('./app');
 // const path = require('path');
 // const multer = require('multer');
 const userRoutes = require('./routes/users');
+const loginRouter = require('./routes/login');
 const getErrors = require('./middlewares/errors');
 
 // const UPLOAD_PATH = path.join(__dirname, '..', 'uploads');
@@ -21,6 +22,8 @@ app.use(express.json());
 
 // const upload = multer({ storage });
 app.use('/users', userRoutes);
+app.use('/login', loginRouter);
+
 app.use(getErrors);
 
 const { PORT = 3000 } = process.env;
