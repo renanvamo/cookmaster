@@ -1,7 +1,10 @@
 const recipesModel = require('../models/recipesModel');
 
-const createRecipe = async () => {
-  const newRecipe = await recipesModel.createRecipe();
+const createRecipe = async (body) => {
+  const { name, ingredients, preparation } = body;
+
+  const url = 'url_da_imagem';
+  const newRecipe = await recipesModel.createRecipe(name, ingredients, preparation, url);
 
   return newRecipe;
 };
