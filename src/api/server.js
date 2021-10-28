@@ -5,6 +5,7 @@ const app = require('./app');
 const userRoutes = require('./routes/users');
 const loginRouter = require('./routes/login');
 const getErrors = require('./middlewares/errors');
+const recipesRouter = require('./routes/recipes');
 
 // const UPLOAD_PATH = path.join(__dirname, '..', 'uploads');
 
@@ -23,6 +24,7 @@ app.use(express.json());
 // const upload = multer({ storage });
 app.use('/users', userRoutes);
 app.use('/login', loginRouter);
+app.use('/recipes', recipesRouter);
 
 app.use(getErrors);
 

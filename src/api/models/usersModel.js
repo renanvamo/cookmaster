@@ -3,6 +3,14 @@ const connection = require('../connection/connection');
 const USER_COLLECTION = 'users';
 const userConnection = () => connection().then((db) => db.collection(USER_COLLECTION));
 
+const findUserByName = async (name) => {
+  const mongoConnection = await userConnection();
+
+  const user = await mongoConnection.findOne({ name });
+
+  return user;
+};
+
 const findUserByEmail = async (email) => {
   const mongoConnection = await userConnection();
 
@@ -30,5 +38,6 @@ const createUser = async (name, email, password, role) => {
 
 module.exports = {
   createUser,
+  findUserByName,
   findUserByEmail,
 };
