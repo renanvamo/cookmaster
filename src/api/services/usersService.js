@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { createError } = require('../middlewares/errors');
 const usersModel = require('../models/usersModel');
 const { userValidations } = require('../validations/validations');
 
@@ -14,8 +15,6 @@ const createToken = (user) => {
   const token = jwt.sign({ userId: _id }, SECRET, jwtConfig);
   return token;
 };
-
-const createError = (code, message) => ({ err: { code, message } });
 
 const createUser = async (data) => {
   const { name, password, email, role = 'user' } = data;

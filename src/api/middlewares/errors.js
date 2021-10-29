@@ -6,6 +6,8 @@ const ERROR_CODES = {
   notDefined: 500,
 };
 
+const createError = (code, message) => ({ err: { code, message } });
+
 function getErrors(error, _req, res, _next) {
   const { message } = error;
   const status = ERROR_CODES[error.code] || ERROR_CODES.notDefined;
@@ -13,4 +15,7 @@ function getErrors(error, _req, res, _next) {
   return res.status(status).json({ message });
 }
 
-module.exports = getErrors;
+module.exports = { 
+  getErrors,
+  createError,
+};
