@@ -6,12 +6,12 @@ const SECRET = 'segredo';
 
 const createToken = (user) => {
   const jwtConfig = {
-    expiresIn: '1h',
+    expiresIn: '10d',
     algorithm: 'HS256',
   };
 
   const { _id } = user; 
-  const token = jwt.sign({ data: _id }, SECRET, jwtConfig);
+  const token = jwt.sign({ userId: _id }, SECRET, jwtConfig);
   return token;
 };
 
