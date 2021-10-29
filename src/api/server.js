@@ -4,8 +4,8 @@ const app = require('./app');
 // const multer = require('multer');
 const userRoutes = require('./routes/users');
 const loginRouter = require('./routes/login');
-const getErrors = require('./middlewares/errors');
 const recipesRouter = require('./routes/recipes');
+const { getErrors } = require('./middlewares/errors');
 
 // const UPLOAD_PATH = path.join(__dirname, '..', 'uploads');
 
