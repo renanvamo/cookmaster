@@ -1,23 +1,21 @@
 const connection = require('../connection/connection');
-const usersModel = require('./usersModel');
 
 const COLLECTION = 'recipes';
 const recipesConnection = () => connection().then((db) => db.collection(COLLECTION));
 
-const createRecipe = async (name, ingredients, preparation, url) => {
+const createRecipe = async (...params) => {
+  const { name, ingredients, preparation, user, url } = params;
   const mongoConnection = await recipesConnection();
-
-  const { id } = await usersModel.findUserByName(name);
 
   const { insertedId } = await mongoConnection.insertOne({
     name,
     ingredients,
     preparation,
-    userId: id,
+    userId: user,
     imageUrl: url,
   });
 
-  return { name, ingredients, preparation, userId: id, _id: insertedId };
+  return { name, ingredients, preparation, userId: user, _id: insertedId };
 };
 
 module.exports = {

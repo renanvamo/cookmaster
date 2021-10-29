@@ -1,8 +1,8 @@
 const recipesService = require('../services/recipesService');
 
 const createRecipe = async (req, res, _next) => {
-  const { body } = req;
-  const recipe = await recipesService.createRecipe(body);
+  const { body, user } = req;
+  const recipe = await recipesService.createRecipe(body, user);
   // const { body } = req;
   // const newUser = await usersService.createUser(body);
 
