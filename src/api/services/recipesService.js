@@ -14,6 +14,13 @@ const createRecipe = async (body, user) => {
   return newRecipe;
 };
 
+const getAllRecipes = async () => {
+  const recipes = await recipesModel.getAllRecipes();
+
+  return recipes;
+};
+
 module.exports = {
   createRecipe,
+  getAllRecipes,
 };
