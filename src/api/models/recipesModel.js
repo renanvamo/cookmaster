@@ -1,4 +1,4 @@
-const { ObjectId } = require('express');
+const { ObjectId } = require('mongodb');
 const connection = require('../connection/connection');
 
 const COLLECTION = 'recipes';
@@ -27,11 +27,9 @@ const getAllRecipes = async () => {
 };
 
 const getRecipeById = async (id) => {
-  if (!ObjectId.isValid(id)) return null;
-
   const mongoConnection = await recipesConnection();
 
-  const recipe = await mongoConnection.find({ id });
+  const recipe = await mongoConnection.findOne(ObjectId(id));
   return recipe;
 };
 
