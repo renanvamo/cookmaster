@@ -344,7 +344,7 @@ describe('5 - Crie um endpoint para visualizar uma receita específica', () => {
     await connection.close();
   });
 
-  it.only('Será validado que é possível listar uma receita específica sem estar autenticado', async () => {
+  it('Será validado que é possível listar uma receita específica sem estar autenticado', async () => {
     let resultRecipe;
 
     await frisby
