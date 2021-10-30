@@ -28,8 +28,26 @@ const getRecipeById = async (id) => {
   return recipe;
 };
 
+const updateRecipe = async (id, body, user) => {
+  const { name, preparation, ingredients } = body;
+  const userId = user;
+
+  const imageUrl = 'novo_url';
+  const updatedRecipe = await recipesModel.updateRecipe(
+    id,
+    name,
+    preparation,
+    ingredients,
+    userId,
+    imageUrl,
+  );
+
+  return updatedRecipe;
+};
+
 module.exports = {
   createRecipe,
   getAllRecipes,
   getRecipeById,
+  updateRecipe,
 };
