@@ -18,6 +18,14 @@ const createRecipe = async (...params) => {
   return { name, ingredients, preparation, userId: user, _id: insertedId };
 };
 
+const getAllRecipes = async () => {
+  const mongoConnection = await recipesConnection();
+  
+  const recipes = await mongoConnection.find().toArray();
+  return recipes;
+};
+
 module.exports = {
   createRecipe,
+  getAllRecipes,
 };
