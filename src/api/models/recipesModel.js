@@ -34,8 +34,23 @@ const getRecipeById = async (id) => {
   return recipe;
 };
 
+const updateRecipe = async (...params) => {
+  const [id, name, ingredients, preparation, userId, imageUrl] = params;
+  if (!ObjectId.isValid(id)) return null;
+
+  const mongoConnection = await recipesConnection();
+
+  const { insertedId } = await mongoConnection.updateOne(
+    ObjectId(id), 
+    { name, ingredients, preparation, userId, imageUrl },
+  );
+
+  return { id, name, ingredients, preparation, userId, _id: insertedId };
+};
+
 module.exports = {
   createRecipe,
   getAllRecipes,
   getRecipeById,
+  updateRecipe,
 };

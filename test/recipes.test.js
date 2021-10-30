@@ -508,7 +508,7 @@ describe('5 - Crie um endpoint para visualizar uma receita específica', () => {
   });
 });
 
-describe.skip('7 - Crie um endpoint para a edição de uma receita', () => {
+describe('7 - Crie um endpoint para a edição de uma receita', () => {
   let connection;
   let db;
 
