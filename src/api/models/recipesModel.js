@@ -1,3 +1,4 @@
+const { ObjectId } = require('express');
 const connection = require('../connection/connection');
 
 const COLLECTION = 'recipes';
@@ -25,7 +26,17 @@ const getAllRecipes = async () => {
   return recipes;
 };
 
+const getRecipeById = async (id) => {
+  if (!ObjectId.isValid(id)) return null;
+
+  const mongoConnection = await recipesConnection();
+
+  const recipe = await mongoConnection.find({ id });
+  return recipe;
+};
+
 module.exports = {
   createRecipe,
   getAllRecipes,
+  getRecipeById,
 };
