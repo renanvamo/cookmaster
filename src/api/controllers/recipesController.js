@@ -27,7 +27,7 @@ const updateRecipe = async (req, res, next) => {
   const { body, user, params: id } = req;
 
   const updatedRecipe = await recipesService.updateRecipe(id, body, user);
-  return updatedRecipe;
+  return res.(200).json(updatedRecipe);
 };
 
 module.exports = {
