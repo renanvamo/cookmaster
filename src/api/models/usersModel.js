@@ -19,6 +19,14 @@ const findUserByEmail = async (email) => {
   return user;
 };
 
+const findUserById = async (id) => {
+  const mongoConnection = await userConnection();
+
+  const user = await mongoConnection.findOne({ _id: id });
+
+  return user;
+};
+
 const createUser = async (name, email, password, role) => {
   const mongoConnection = await userConnection();
 
@@ -40,4 +48,5 @@ module.exports = {
   createUser,
   findUserByName,
   findUserByEmail,
+  findUserById,
 };

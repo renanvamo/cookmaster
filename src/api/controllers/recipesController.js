@@ -24,11 +24,10 @@ const getRecipeById = async (req, res, next) => {
 };
 
 const updateRecipe = async (req, res) => {
-  const { body, params, user } = req;
+  const { body, params, userId } = req;
   const { id } = params;
   
-  console.log(user);
-  const updatedRecipe = await recipesService.updateRecipe(id, body);
+  const updatedRecipe = await recipesService.updateRecipe(id, body, userId);
   return res.status(200).json(updatedRecipe);
 };
 
