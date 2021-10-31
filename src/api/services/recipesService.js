@@ -28,14 +28,14 @@ const getRecipeById = async (id) => {
   return recipe;
 };
 
-const updateRecipe = async (id, body, userId) => {
+const updateRecipe = async (id, body) => {
   const { name, preparation, ingredients } = body;
 
   const updatedRecipe = await recipesModel.updateRecipe(
     id,
     name,
-    preparation,
     ingredients,
+    preparation,
   );
 
   return updatedRecipe;
