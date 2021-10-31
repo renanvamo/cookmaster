@@ -3,6 +3,8 @@ const recipesModel = require('../models/recipesModel');
 const usersModel = require('../models/usersModel');
 const { recipeValidations } = require('../validations/validations');
 
+const hasPermission = (role, ownerUser, reqUser) => role === 'admin' || ownerUser === reqUser;
+
 const createRecipe = async (body, userId) => {
   const { name, ingredients, preparation } = body;
 
@@ -35,7 +37,7 @@ const updateRecipe = async (id, body, userId) => {
   const user = await usersModel.findUserById(userId);
   const recipe = await recipesModel.getRecipeById(id);
 
-  if (user.role !== 'admin' && userId !== recipe.userId) {
+  if (!hasPermission(user.role, recipe.userId, userId)) {
     return createError('unauthorized', 'you can change only your recipes');
   }
 
