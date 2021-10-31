@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const connection = require('../connection/connection');
 
 const USER_COLLECTION = 'users';
@@ -22,8 +23,8 @@ const findUserByEmail = async (email) => {
 const findUserById = async (id) => {
   const mongoConnection = await userConnection();
 
-  const user = await mongoConnection.findOne({ _id: id });
-
+  const user = await mongoConnection.findOne({ _id: ObjectId(id) });
+  
   return user;
 };
 

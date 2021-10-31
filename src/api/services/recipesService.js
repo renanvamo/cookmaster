@@ -1,5 +1,6 @@
 const { createError } = require('../middlewares/errors');
 const recipesModel = require('../models/recipesModel');
+const usersModel = require('../models/usersModel');
 const { recipeValidations } = require('../validations/validations');
 
 const createRecipe = async (body, userId) => {
@@ -28,8 +29,15 @@ const getRecipeById = async (id) => {
   return recipe;
 };
 
-const updateRecipe = async (id, body) => {
+const updateRecipe = async (id, body, userId) => {
   const { name, preparation, ingredients } = body;
+
+  const user = await usersModel.findUserById(userId);
+  const recipe = await recipesModel.getRecipeById(id);
+
+  if (user.role !== 'admin' && userId !== recipe.userId) {
+    return createError('unauthorized', 'you can change only your recipes');
+  }
 
   const updatedRecipe = await recipesModel.updateRecipe(
     id,
