@@ -24,21 +24,22 @@ const getRecipeById = async (req, res, next) => {
 };
 
 const updateRecipe = async (req, res) => {
-  const { body, params, userId } = req;
+  const { body, params, userId, role } = req;
   const { id } = params;
   
-  const updatedRecipe = await recipesService.updateRecipe(id, body, userId);
+  const updatedRecipe = await recipesService.updateRecipe(id, body, userId, role);
   return res.status(200).json(updatedRecipe);
 };
 
 const deleteRecipe = async (req, res, next) => {
   const { id } = req.params;
+  const { userId, role } = req;
 
-  const wasDeleted = recipesService.deleteRecipe(id);
+  const wasDeleted = await recipesService.deleteRecipe(id, userId, role);
 
   if (wasDeleted.err) return next(wasDeleted.err);
 
-  return res.status(204);
+  return res.status(204).send();
 };
 
 module.exports = {

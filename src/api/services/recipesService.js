@@ -1,6 +1,5 @@
 const { createError } = require('../middlewares/errors');
 const recipesModel = require('../models/recipesModel');
-const usersModel = require('../models/usersModel');
 const { recipeValidations } = require('../validations/validations');
 
 const hasPermission = (role, ownerUser, reqUser) => role === 'admin' || ownerUser === reqUser;
@@ -31,14 +30,13 @@ const getRecipeById = async (id) => {
   return recipe;
 };
 
-const updateRecipe = async (id, body, userId) => {
+const updateRecipe = async (id, body, userId, role) => {
   const { name, preparation, ingredients } = body;
 
-  const user = await usersModel.findUserById(userId);
   const recipe = await recipesModel.getRecipeById(id);
 
-  if (!hasPermission(user.role, recipe.userId, userId)) {
-    return createError('unauthorized', 'you can change only your recipes');
+  if (!hasPermission(role, recipe.userId, userId)) {
+    return createError('unauthorized', 'you can update only your recipes');
   }
 
   const updatedRecipe = await recipesModel.updateRecipe(
@@ -51,7 +49,15 @@ const updateRecipe = async (id, body, userId) => {
   return updatedRecipe;
 };
 
-const deleteRecipe = async (id) => {
+const deleteRecipe = async (id, userId, role) => {
+  const recipe = await recipesModel.getRecipeById(id);
+  
+  console.log(id, userId, role, recipe);
+  
+  if (!hasPermission(role, recipe.userId, userId)) {
+    return createError('unauthorized', 'you can change only your recipes');
+  }
+
   const wasDeleted = await recipesModel.deleteRecipe(id);
 
   if (!wasDeleted) return createError('not_found', 'recipe not found');

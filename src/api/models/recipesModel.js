@@ -52,10 +52,10 @@ const updateRecipe = async (...params) => {
 
 const deleteRecipe = async (id) => {
   if (!ObjectId.isValid(id)) return null;
-
-  const mongoConnection = recipesConnection();
-
-  await mongoConnection.deleteOne({ _id: id });
+  
+  const mongoConnection = await recipesConnection();
+  
+  await mongoConnection.deleteOne({ _id: ObjectId(id) });
 
   return true;
 };
@@ -64,6 +64,6 @@ module.exports = {
   createRecipe,
   getAllRecipes,
   getRecipeById,
-  deleteRecipe,
   updateRecipe,
+  deleteRecipe,
 };
