@@ -6,6 +6,6 @@ const { checkToken } = require('../validations/checkToken');
 router.post('/', checkToken, recipesController.createRecipe);
 router.get('/', recipesController.getAllRecipes);
 router.get('/:id', recipesController.getRecipeById);
-router.put('/:id', recipesController.updateRecipe);
+router.put('/:id', checkToken, recipesController.updateRecipe);
 
 module.exports = router;

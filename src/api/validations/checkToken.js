@@ -8,7 +8,7 @@ const checkToken = (req, res, next) => {
 
   try {
     const decode = jwt.verify(token, SECRET);
-    req.user = decode.userId;
+    req.userId = decode.userId;
     next();
   } catch (_err) {
     return res.status(401).json({ message: 'jwt malformed' });
