@@ -59,7 +59,6 @@ const deleteRecipe = async (id) => {
   return wasDeleted;
 };
 
-
 module.exports = {
   createRecipe,
   getAllRecipes,
