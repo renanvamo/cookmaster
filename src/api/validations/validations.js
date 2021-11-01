@@ -15,7 +15,6 @@ const userValidations = (data) => {
     name: Joi.string().min(5).required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(5).required(),
-    role: Joi.string(),
   })
     .validate(data);
   return schema;

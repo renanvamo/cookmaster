@@ -16,11 +16,15 @@ const createToken = (user) => {
   return token;
 };
 
-const createUser = async (data) => {
-  const { name, password, email, role = 'user' } = data;
+const createUser = async (data, role, admin = false) => {
+  const { name, password, email } = data;
 
   const { error: validationError } = userValidations(data);
   if (validationError) return createError('badRequest', 'Invalid entries. Try again.');
+
+  if (admin && role !== 'admin') {
+    return createError('forbidden', 'Only admins can register new admins');
+  }
 
   const newUser = await usersModel.createUser(name, email, password, role);
   

@@ -8,6 +8,7 @@ const getImages = async (req, res, next) => {
     return next(imagePath.err);
   }
 
+  // https://newbedev.com/nodejs-how-to-read-and-output-jpg-image
   res.writeHead(200, { 'Content-Type': 'image/jpeg' });
   return res.end(imagePath);
 };
