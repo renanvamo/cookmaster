@@ -42,10 +42,17 @@ const deleteRecipe = async (req, res, next) => {
   return res.status(204).send();
 };
 
+const uploadImage = async (req, res, _next) => {
+  const { id } = req.params;
+  console.log(id);
+  return res.send('funfou');
+};
+
 module.exports = {
   createRecipe,
   getAllRecipes,
   getRecipeById,
   updateRecipe,
   deleteRecipe,
+  uploadImage,
 };
