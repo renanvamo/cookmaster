@@ -70,7 +70,9 @@ const uploadImage = async (id, userId, role) => {
     return createError('unauthorized', 'you can change only your recipes');
   }
 
-  const uploadedImage = await recipesModel.uploadImage(id, userId, role);
+  const pathString = `localhost:3000/src/uploads/${id}.jpeg`;
+
+  const uploadedImage = await recipesModel.uploadImage(id, pathString);
 
   return uploadedImage;
 };

@@ -13,7 +13,7 @@ const createRecipe = async (...params) => {
     ingredients,
     preparation,
     userId,
-    imageUrl: url,
+    image: url,
   });
 
   return { name, ingredients, preparation, userId, _id: insertedId };
@@ -60,10 +60,25 @@ const deleteRecipe = async (id) => {
   return true;
 };
 
+const uploadImage = async (id, pathString) => {
+  if (!ObjectId.isValid(id)) return null;
+    
+  const mongoConnection = await recipesConnection();
+
+  await mongoConnection.updateOne(
+    { _id: ObjectId(id) },
+    { $set: { image: pathString } },
+  );
+
+  const uploadedImage = await getRecipeById(id);
+  return uploadedImage;
+};
+
 module.exports = {
   createRecipe,
   getAllRecipes,
   getRecipeById,
   updateRecipe,
   deleteRecipe,
+  uploadImage,
 };

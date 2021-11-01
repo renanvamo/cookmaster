@@ -8,7 +8,7 @@ router.get('/', recipesController.getAllRecipes);
 router.get('/:id', recipesController.getRecipeById);
 router.put('/:id', checkToken, recipesController.updateRecipe);
 
-router.post(
+router.put(
   '/:id/image',
   checkToken,
   upload.single('image'),

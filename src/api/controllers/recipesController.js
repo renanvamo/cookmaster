@@ -50,7 +50,7 @@ const uploadImage = async (req, res, next) => {
 
   if (uploadedImage.err) return next(uploadedImage.err);
 
-  return res.status(201).json(uploadedImage);
+  return res.status(200).json(uploadedImage);
 };
 
 module.exports = {
