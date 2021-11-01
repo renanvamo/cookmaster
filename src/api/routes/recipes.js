@@ -7,7 +7,14 @@ router.post('/', checkToken, recipesController.createRecipe);
 router.get('/', recipesController.getAllRecipes);
 router.get('/:id', recipesController.getRecipeById);
 router.put('/:id', checkToken, recipesController.updateRecipe);
-router.post('/:id/image', upload.single('image'), recipesController.uploadImage);
+
+router.post(
+  '/:id/image',
+  checkToken,
+  upload.single('image'),
+  recipesController.uploadImage,
+);
+
 router.delete('/:id', checkToken, recipesController.deleteRecipe);
 
 module.exports = router;

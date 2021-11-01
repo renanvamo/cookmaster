@@ -63,10 +63,23 @@ const deleteRecipe = async (id, userId, role) => {
   return wasDeleted;
 };
 
+const uploadImage = async (id, userId, role) => {
+  const recipe = await recipesModel.getRecipeById(id);
+    
+  if (!hasPermission(role, recipe.userId, userId)) {
+    return createError('unauthorized', 'you can change only your recipes');
+  }
+
+  const uploadedImage = await recipesModel.uploadImage(id, userId, role);
+
+  return uploadedImage;
+};
+
 module.exports = {
   createRecipe,
   getAllRecipes,
   getRecipeById,
   updateRecipe,
   deleteRecipe,
+  uploadImage,
 };

@@ -42,10 +42,15 @@ const deleteRecipe = async (req, res, next) => {
   return res.status(204).send();
 };
 
-const uploadImage = async (req, res, _next) => {
+const uploadImage = async (req, res, next) => {
   const { id } = req.params;
-  console.log(id);
-  return res.send('funfou');
+  const { userId, role } = req;
+
+  const uploadedImage = await recipesService.uploadImage(id, userId, role);
+
+  if (uploadedImage.err) return next(uploadedImage.err);
+
+  return res.status(201).json(uploadedImage);
 };
 
 module.exports = {
