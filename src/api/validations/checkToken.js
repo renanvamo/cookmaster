@@ -9,7 +9,6 @@ const checkToken = (req, res, next) => {
   try {
     const decode = jwt.verify(token, SECRET);
     req.userId = decode.userId;
-    console.log(decode);
     req.role = decode.role;
     next();
   } catch (_err) {

@@ -51,9 +51,7 @@ const updateRecipe = async (id, body, userId, role) => {
 
 const deleteRecipe = async (id, userId, role) => {
   const recipe = await recipesModel.getRecipeById(id);
-  
-  console.log(id, userId, role, recipe);
-  
+    
   if (!hasPermission(role, recipe.userId, userId)) {
     return createError('unauthorized', 'you can change only your recipes');
   }
