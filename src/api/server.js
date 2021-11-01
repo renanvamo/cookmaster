@@ -21,3 +21,5 @@ app.use(getErrors);
 const { PORT = 3000 } = process.env;
 
 app.listen(PORT, () => console.log(`conectado na porta ${PORT}`));
+
+module.exports = app;
