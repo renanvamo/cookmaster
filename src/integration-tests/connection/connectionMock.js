@@ -10,7 +10,6 @@ const OPTIONS = {
 const connection = async () => {
   const URLMock = await DBServer.getUri();
   return MongoClient.connect(URLMock, OPTIONS)
-    .then((conn) => conn.db('Cobokmaster'));
 };
 
 module.exports = connection;
