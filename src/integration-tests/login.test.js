@@ -5,7 +5,6 @@ const sinon = require('sinon');
 const server = require('../api/server');
 const connection = require('./connection/connectionMock');
 const { MongoClient } = require('mongodb');
-const { afterEach } = require('mocha');
 
 chai.use(chaiHttp);
 

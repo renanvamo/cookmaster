@@ -5,13 +5,15 @@ const sinon = require('sinon');
 const server = require('../api/server');
 const connection = require('./connection/connectionMock');
 const { MongoClient } = require('mongodb');
-const { x } = require('joi');
+const fs = require('fs');
+const path = require('path');
 
 chai.use(chaiHttp);
 
 describe('realiza testes de integração na rota \'/recipes\'', () => {
   let connectionMock;
   let token;
+  const invalidToken = 'token-inválido';
   
   before(async () => {
     connectionMock = await connection();
@@ -27,6 +29,7 @@ describe('realiza testes de integração na rota \'/recipes\'', () => {
       role: 'user'
     });
 
+    // https://buddy.works/tutorials/unit-testing-jwt-secured-node-and-express-restful-api-with-chai-and-mocha
     await chai.request(server) 
       .post('/login')
       .send({
@@ -63,7 +66,6 @@ describe('realiza testes de integração na rota \'/recipes\'', () => {
   });
   
   it('enviando um token inválido, e o resultado deve ser \'jwt malformed\'', async () => {
-    const invalidToken = 'token-inválido'
     const response = await chai.request(server)
       .post('/recipes')
       .set('Authorization', invalidToken)
@@ -89,10 +91,10 @@ describe('realiza testes de integração na rota \'/recipes\'', () => {
         preparation: 'ferva agua, ferva salsicha separadamente em pedaços, depois de prontos, junte ambos e jogue batata palha em cima'
       });
 
-      expect(response).to.have.status(400);  
-      expect(response).to.be.an('object');  
-      expect(response.body).to.have.property('message');  
-      expect(response.body.message).to.be.equal('Invalid entries. Try again.');
+    expect(response).to.have.status(400);  
+    expect(response).to.be.an('object');  
+    expect(response.body).to.have.property('message');  
+    expect(response.body.message).to.be.equal('Invalid entries. Try again.');
   });
 
   it('com o campo \'ingredients\' em branco e o resultado deve ser \'Invalid entries. Try again.\'', async () => {
@@ -105,10 +107,10 @@ describe('realiza testes de integração na rota \'/recipes\'', () => {
         preparation: 'ferva agua, ferva salsicha separadamente em pedaços, depois de prontos, junte ambos e jogue batata palha em cima'
       });
 
-      expect(response).to.have.status(400);  
-      expect(response).to.be.an('object');  
-      expect(response.body).to.have.property('message');  
-      expect(response.body.message).to.be.equal('Invalid entries. Try again.');
+    expect(response).to.have.status(400);  
+    expect(response).to.be.an('object');  
+    expect(response.body).to.have.property('message');  
+    expect(response.body.message).to.be.equal('Invalid entries. Try again.');
   });
 
   it('com o campo \'preparation\' em branco, o retorno deve ser \'Invalid entries. Try again.\'', async () => {
@@ -121,10 +123,10 @@ describe('realiza testes de integração na rota \'/recipes\'', () => {
         preparation: ''
       });
 
-      expect(response).to.have.status(400);  
-      expect(response).to.be.an('object');  
-      expect(response.body).to.have.property('message');  
-      expect(response.body.message).to.be.equal('Invalid entries. Try again.');
+    expect(response).to.have.status(400);  
+    expect(response).to.be.an('object');  
+    expect(response.body).to.have.property('message');  
+    expect(response.body.message).to.be.equal('Invalid entries. Try again.');
   });
 
   it('enviando todos os campos válidos, o retorno deve ser a nova receita', async () => {
@@ -276,7 +278,6 @@ describe('realiza testes de integração na rota \'/recipes\'', () => {
 
   it('se passada a rota \'/recipes/id\', usando o método put, com o token inválido', async () => {
     let recipeId;
-    const invalidToken = 'token-inválido'
 
     await chai.request(server)
       .post('/recipes')
@@ -305,7 +306,6 @@ describe('realiza testes de integração na rota \'/recipes\'', () => {
 
   it('se passada a rota \'/recipes/id\', usando o método delete, com um token inválido', async () => {
     let recipeId;
-    const invalidToken = 'token-inválido'
 
     await chai.request(server)
       .post('/recipes')
@@ -397,15 +397,77 @@ describe('realiza testes de integração na rota \'/recipes\'', () => {
     expect(newResponse.body).to.have.property('message');
     expect(newResponse.body.message).to.be.equal('recipe not found');
   });
+
+  it('se passada a rota \'/recipes/id/image\', usando o método put, e enviando um token válido, adiciona uma chave image, com o valor do caminho da imagem no serve, na receita', async () => {
+    let recipeId;
+
+    await chai.request(server)
+      .post('/recipes')
+      .set('Authorization', token)
+      .send({
+        name: 'miojo gourmet',
+        ingredients: 'miojo, salsicha e batata palha',
+        preparation: 'ferva agua, ferva salsicha separadamente em pedaços, depois de prontos, junte ambos e jogue batata palha em cima'
+      })
+      .then(resp => recipeId = resp.body.recipe._id );
+
+    const response = await chai.request(server)
+      .put(`/recipes/${recipeId}/image`)
+      .set('Authorization', token)
+      .set('Content-Type', 'image/jpeg')
+      .attach('image', fs.readFileSync(path.join(__dirname, '..', 'uploads', 'ratinho.jpg')), 'uploads/ratinho.jpg');
+      
+    expect(response).to.have.status(200);  
+    expect(response.body).to.be.an('object');
+    expect(response.body).to.have.property('image');
+  });
+
+  it('se passada a rota \'/recipes/id/image\', usando o método put, com um token inválido, retorna \'jwt malformed\'', async () => {
+    let recipeId;
+
+    await chai.request(server)
+      .post('/recipes')
+      .set('Authorization', token)
+      .send({
+        name: 'miojo gourmet',
+        ingredients: 'miojo, salsicha e batata palha',
+        preparation: 'ferva agua, ferva salsicha separadamente em pedaços, depois de prontos, junte ambos e jogue batata palha em cima'
+      })
+
+    const response = await chai.request(server)
+      .put(`/recipes/${recipeId}/image`)
+      .set('Authorization', invalidToken)
+      .set('Content-Type', 'image/jpeg')
+      .attach('image', fs.readFileSync(path.join(__dirname, '..', 'uploads', 'ratinho.jpg')), 'uploads/ratinho.jpg');
+      
+      expect(response).to.have.status(401);  
+      expect(response).to.be.an('object');  
+      expect(response.body).to.have.property('message');  
+      expect(response.body.message).to.be.equal('jwt malformed');
+  });
+
+  it('se passada a rota \'/recipes/id.jpeg\', retorna a imagem que esta associada a receita', async () => {
+    let recipeId;
+
+    await chai.request(server)
+      .post('/recipes')
+      .set('Authorization', token)
+      .send({
+        name: 'miojo gourmet',
+        ingredients: 'miojo, salsicha e batata palha',
+        preparation: 'ferva agua, ferva salsicha separadamente em pedaços, depois de prontos, junte ambos e jogue batata palha em cima'
+      })
+      .then(resp => recipeId = resp.body.recipe._id );
+
+    await chai.request(server)
+      .put(`/recipes/${recipeId}/image`)
+      .set('Authorization', token)
+      .set('Content-Type', 'image/jpeg')
+      .attach('image', fs.readFileSync(path.join(__dirname, '..', 'uploads', 'ratinho.jpg')), 'uploads/ratinho.jpg');
+      
+    const response = await chai.request(server)
+      .get(`/images/${recipeId}.jpeg`);
+
+    expect(response).to.have.status(200);  
+  });
 });
-
-
-
-// await chai.request(server)
-// .post('/login')
-// .send({
-//   email: 'usuario@gmail.com',
-//   passoword: 'senha'
-// })
-// .end((_err, res) => {
-//   token = res.body.token;
