@@ -8,9 +8,6 @@ const { MongoClient } = require('mongodb');
 const { afterEach } = require('mocha');
 
 chai.use(chaiHttp);
-// describe('', () => {
-  
-// });
 
 describe('realiza testes de integração na rota \'/users\'', () => {
   let connectionMock;
