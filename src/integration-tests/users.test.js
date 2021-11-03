@@ -18,11 +18,20 @@ describe('realiza testes de integração na rota \'/users\'', () => {
   });
 
   beforeEach(async () => {
-    await connectionMock.db('Cookmaster').collection('users').insertOne({
-      name: 'usuário',
-      password: 'senha',
-      email: 'usuario@gmail.com'
-    });
+    await connectionMock.db('Cookmaster').collection('users').insertMany([
+      {
+        name: 'usuário',
+        role: 'user',
+        email: 'usuario@gmail.com',
+        password: 'senha'
+      },
+      {
+        name: 'admin',
+        role: 'admin',
+        email: 'admin@gmail.com',
+        password: 'senha'
+      },
+    ]);
   });
   
   afterEach(async () => {
@@ -127,5 +136,59 @@ describe('realiza testes de integração na rota \'/users\'', () => {
     expect(response.body).to.be.an('object');
     expect(response.body).to.have.property('message');
     expect(response.body.message).to.be.equal('Email already registered');
+  });
+
+  it('testa a rota \'/users/admin\' e tenta criar um novo admin, usando um usuário do tipo \'user\', e a resposta deve ser \'Only admins can register new admins\'', async () => {
+    let userToken;
+    await chai.request(server)
+      .post('/login')
+      .send({
+        email: 'usuario@gmail.com',
+        password: 'senha'
+      })
+      .then(response => userToken = response.body.token);
+
+    const response = await chai.request(server)
+      .post('/users/admin')
+      .set('Authorization', userToken)
+      .send({
+        name: 'Admin da Vingança',
+        password: 'senha-do-admin',
+        email: 'vdeadmin@gmail.com'
+      });
+
+    expect(response).to.have.status(403);  
+    expect(response.body).to.be.an('object');
+    expect(response.body).to.have.property('message');
+    expect(response.body.message).to.be.equal('Only admins can register new admins');
+  });
+
+  it('testa a rota \'/users/admin\' e tenta criar um novo admin, usando um usuário do tipo \'admin\', e a resposta deve ser os dados do novo usuário admin', async () => {
+    let adminToken;
+
+    await chai.request(server)
+      .post('/login')
+      .send({
+        email: 'admin@gmail.com',
+        password: 'senha'
+      })
+      .then(response => adminToken = response.body.token);
+
+    const response = await chai.request(server)
+      .post('/users/admin')
+      .set('Authorization', adminToken)
+      .send({
+        name: 'Admin da Vingança',
+        password: 'senha-do-admin',
+        email: 'vdeadmin@gmail.com'
+      });
+
+    expect(response).to.have.status(201);  
+    expect(response.body).to.be.an('object');
+    expect(response.body).to.have.property('user')
+    expect(response.body.user).to.have.property('_id');
+    expect(response.body.user.name).to.be.equal('Admin da Vingança');
+    expect(response.body.user.email).to.be.equal('vdeadmin@gmail.com');
+    expect(response.body.user.role).to.be.equal('admin');
   });
 });
