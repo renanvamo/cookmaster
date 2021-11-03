@@ -35,6 +35,8 @@ const updateRecipe = async (id, body, userId, role) => {
 
   const recipe = await recipesModel.getRecipeById(id);
 
+  if (!recipe) return createError('notFound', 'recipe not found');
+
   if (!hasPermission(role, recipe.userId, userId)) {
     return createError('unauthorized', 'you can update only your recipes');
   }
@@ -44,6 +46,8 @@ const updateRecipe = async (id, body, userId, role) => {
     name,
     ingredients,
     preparation,
+    recipe.userId,
+    recipe.image,
   );
 
   return updatedRecipe;
@@ -51,14 +55,14 @@ const updateRecipe = async (id, body, userId, role) => {
 
 const deleteRecipe = async (id, userId, role) => {
   const recipe = await recipesModel.getRecipeById(id);
-    
+  
+  if (!recipe) return createError('notFound', 'recipe not found');
+  
   if (!hasPermission(role, recipe.userId, userId)) {
-    return createError('unauthorized', 'you can change only your recipes');
+    return createError('unauthorized', 'you can delete only your recipes');
   }
-
+  
   const wasDeleted = await recipesModel.deleteRecipe(id);
-
-  if (!wasDeleted) return createError('not_found', 'recipe not found');
 
   return wasDeleted;
 };

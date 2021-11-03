@@ -285,7 +285,6 @@ describe('realiza testes de integração na rota \'/recipes\'', () => {
     expect(response.body.message).to.be.equal('jwt malformed');
   });
 
-
   it('se passada a rota \'/recipes/id\', usando o método put, com o token válido mas de outro usuário', async () => {
     const response = await chai.request(server)
       .put(`/recipes/${recipeId}`)
@@ -300,6 +299,24 @@ describe('realiza testes de integração na rota \'/recipes\'', () => {
     expect(response).to.be.an('object');  
     expect(response.body).to.have.property('message');  
     expect(response.body.message).to.be.equal('you can update only your recipes');
+  });
+
+  it('se passada a rota \'/recipes/id\', usando o método put, em um id de receita inválido', async () => {
+    const response = await chai.request(server)
+      .put(`/recipes/${invalidRecipeId}`)
+      .set('Authorization', userToken1)
+      .send({
+        name: 'misto quente',
+        ingredients: 'pão, presunto e quejo',
+        preparation: 'coloque queijo e presunto a gosto em uma chapa quente, e adicione como recheio no pão após 3 minutos'
+      });
+    
+    console.log(response.body)
+      
+    expect(response).to.have.status(404);  
+    expect(response).to.be.an('object');  
+    expect(response.body).to.have.property('message');  
+    expect(response.body.message).to.be.equal('recipe not found');
   });
 
   it('se passada a rota \'/recipes/id\', usando o método delete, com um token inválido', async () => {
@@ -333,6 +350,29 @@ describe('realiza testes de integração na rota \'/recipes\'', () => {
     expect(newResponse.body).to.have.property('message');
     expect(newResponse.body.message).to.be.equal('recipe not found');
   });
+
+  it('se passada a rota \'/recipes/id\', usando o método delete, em um id de receita inválido', async () => {
+    const response = await chai.request(server)
+      .delete(`/recipes/${invalidRecipeId}`)
+      .set('Authorization', userToken1)
+          
+    expect(response).to.have.status(404);  
+    expect(response).to.be.an('object');  
+    expect(response.body).to.have.property('message');  
+    expect(response.body.message).to.be.equal('recipe not found');
+  });
+
+  it('se passada a rota \'/recipes/id\', usando o método delete, em um id de receita válido, mas com outro usuário', async () => {
+    const response = await chai.request(server)
+      .delete(`/recipes/${recipeId}`)
+      .set('Authorization', userToken2)
+          
+    expect(response).to.have.status(401);  
+    expect(response).to.be.an('object');  
+    expect(response.body).to.have.property('message');  
+    expect(response.body.message).to.be.equal('you can delete only your recipes');
+  });
+
 
   it('se passada a rota \'/recipes/id/image\', usando o método put, e enviando um token válido, adiciona uma chave image, com o valor do caminho da imagem no server na receita', async () => {
     const response = await chai.request(server)

@@ -35,24 +35,19 @@ const getRecipeById = async (id) => {
 };
 
 const updateRecipe = async (...params) => {
-  const [id, name, ingredients, preparation] = params;
-  if (!ObjectId.isValid(id)) return null;
+  const [id, name, ingredients, preparation, userId, image] = params;
   
   const mongoConnection = await recipesConnection();
-
-  const { userId, imageUrl } = await getRecipeById(id);
   
   await mongoConnection.updateOne(
     { _id: id }, 
-    { $set: { name, ingredients, preparation, userId, imageUrl } },
+    { $set: { name, ingredients, preparation, userId, image } },
   );
 
   return { _id: id, name, ingredients, preparation, userId };
 };
 
-const deleteRecipe = async (id) => {
-  if (!ObjectId.isValid(id)) return null;
-  
+const deleteRecipe = async (id) => {  
   const mongoConnection = await recipesConnection();
   
   await mongoConnection.deleteOne({ _id: ObjectId(id) });
