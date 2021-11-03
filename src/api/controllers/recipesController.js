@@ -23,11 +23,13 @@ const getRecipeById = async (req, res, next) => {
   return res.status(200).json(recipe);
 };
 
-const updateRecipe = async (req, res) => {
+const updateRecipe = async (req, res, next) => {
   const { body, params, userId, role } = req;
   const { id } = params;
   
   const updatedRecipe = await recipesService.updateRecipe(id, body, userId, role);
+  if (updatedRecipe.err) return next(updatedRecipe.err);
+
   return res.status(200).json(updatedRecipe);
 };
 
